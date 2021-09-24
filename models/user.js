@@ -1,10 +1,14 @@
-const PostModel = require("./post");
 module.exports = (sequelize, Sequelize) => {
     const UserModel = sequelize.define('user', {
         id: {
             type: Sequelize.INTEGER.UNSIGNED,
             autoIncrement: true,
             primaryKey:true,
+            allowNull:false
+        },
+        pseudo: {
+            type: Sequelize.STRING(255),
+            unique: true,
             allowNull:false
         },
         email: {
