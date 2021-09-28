@@ -18,9 +18,6 @@ module.exports = (sequelize, Sequelize) => {
         urlImage: {
             type: Sequelize.STRING(255)
         },
-        user_id: {
-            type: Sequelize.INTEGER.UNSIGNED
-        },
     },{
         modelName: 'Post',
         timestamps: true
