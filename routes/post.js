@@ -1,4 +1,5 @@
 module.exports = function(routePost) {
     const post = require('../controllers/post');
-    routePost.post('/api/post', post.post)
+    //const auth = require('../middleware/auth');
+    routePost.post('/api/post', post.createPost);
 }

@@ -1,10 +1,11 @@
 const db = require('../config/db.config');
 const Post = db.post;
 
-exports.post = (req, res) => {
+exports.createPost = (req, res) => {
     Post.create({
-        titre: req.body.titre,
+        title: req.body.title,
         message: req.body.message,
+        userId: req.body.userId
     })
     .then( (user) => {
         res.status(200).json({ 

@@ -16,7 +16,7 @@ const db = require('./config/db.config');
 //relation des tables
 const User = db.user;
 const Post = db.post;
-User.hasMany(Post);
+User.hasMany(Post, {onDelete: 'cascade'});
 
 //synchro & création des tables
 db.sequelize.sync() //{ force: true }

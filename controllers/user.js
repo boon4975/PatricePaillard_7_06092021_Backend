@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const env = require("../config/env");
 const User = db.user;
+const Post = db.post;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
@@ -30,8 +31,18 @@ exports.signup = (req, res, next) => {
             password: hash,
             moderator: 0
           })
-          .then( (resp) =>{
-            res.status(201).json(resp);
+          .then( (user) =>{
+              res.status(201).json({
+                userId: user.id,
+                email:user.email,
+                pseudo: user.pseudo,
+                moderator: user.moderator,
+                token: jwt.sign(
+                    { userId: user.id},
+                    `${env.token}`,
+                    {expiresIn: '24h'}
+                )
+              })
             })
           .catch((error)=> res.status(500).json({ error }))
         })
@@ -72,7 +83,9 @@ exports.login = (req, res, next) => {
           }
           res.status(201).json({
             userId: user.id,
+            email:user.email,
             pseudo: user.pseudo,
+            moderator: user.moderator,
             token: jwt.sign(
                 { userId: user.id},
                 `${env.token}`,
@@ -90,20 +103,6 @@ exports.login = (req, res, next) => {
     res.status(202).json('Le mot de passe doit comporter au moins 8 caractères dont 1 chiffre, 1 minuscule, 1 majuscule, 1 caractère spéciale')
   }
 };
-/*
-exports.profil = (req, res, next) => {
-  let data = [];
-  data.push(req.body.userId, req.body.oldpassword, req.body.newpassword);
-  User.update(
-    {password: req.body.newpassword},
-    {where: {id: req.body.userId}}
-  )
-  .then((update)=> {
-    res.status(200).json(update)
-  })
-  .catch((e)=> res.status(401).json({ e }))
-}
-*/
 
 exports.profil = (req, res, next) => {
   let validInput = [];
@@ -139,5 +138,62 @@ exports.profil = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }))
   }else{
     res.status(202).json('Le Nouveau mot de passe doit comporter au moins 8 caractères dont 1 chiffre, 1 minuscule, 1 majuscule, 1 caractère spéciale');
+  }
+};
+
+exports.deluser = (req, res, next) => {
+  let idToDel = parseInt(req.params.id);
+  if(Number.isInteger(idToDel)){
+    User.destroy(
+      {where: {id: idToDel}}
+    )
+    .then((result) => {
+      res.status(201).json(result)
+    })
+    .catch((error)=> res.status(500).json({ error }))
+  }else{
+    res.status(401).json('erreur de transfert')
+  }
+};
+
+exports.updateModerator = (req, res, next) =>{
+  let receivedMail = req.body.email;
+    if(receivedMail.match(regexEmail) != null){
+      if(req.body.action == 'get'){
+        User.findOne({
+          where: {email: receivedMail}
+        })
+        .then((result)=>{
+          if(result){
+            res.status(200).json({
+              email:result.email,
+              pseudo: result.pseudo,
+              moderator: result.moderator
+            })
+          }
+          return res.status(202).json({message: 'Utilisateur introuvable'})
+        })
+        .catch((error)=> res.status(500).json({ error }))
+      }else if(req.body.action == 'put'){
+        User.update(
+          {moderator: req.body.moderator},
+          {where: {email: receivedMail}}
+        )
+        .then((user) => {
+          res.status(200).json({
+            moderator: req.body.moderator,
+            pseudo: req.body.pseudo
+          })
+        })
+        .catch((error) => res.status(500).json({ error }))
+      }
+    }else{
+      return res.status(202).json({ message: 'format de mail incorrect'})
+    }
+}
+
+exports.moderator = (req, res, next) =>{
+  if(req.body.action == get && receivedMail.match(regexEmail) != null){
+
   }
 }

@@ -8,7 +8,6 @@ module.exports = (sequelize, Sequelize) => {
         },
         title: {
             type: Sequelize.STRING(255),
-            unique: true,
             allowNull:false
         },
         message: {
@@ -18,9 +17,13 @@ module.exports = (sequelize, Sequelize) => {
         urlImage: {
             type: Sequelize.STRING(255)
         },
+        user_id: {
+            type: Sequelize.INTEGER.UNSIGNED
+        },
     },{
         modelName: 'Post',
-        timestamps: true
+        timestamps: true,
+        underscored: true
     }  
     )
     return PostModel;
