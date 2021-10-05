@@ -179,7 +179,7 @@ exports.updateModerator = (req, res, next) =>{
           {moderator: req.body.moderator},
           {where: {email: receivedMail}}
         )
-        .then((user) => {
+        .then(() => {
           res.status(200).json({
             moderator: req.body.moderator,
             pseudo: req.body.pseudo

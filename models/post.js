@@ -14,11 +14,12 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING(255),
             allowNull:false
         },
-        urlImage: {
+        url_image: {
             type: Sequelize.STRING(255)
         },
         user_id: {
-            type: Sequelize.INTEGER.UNSIGNED
+            type: Sequelize.INTEGER.UNSIGNED,
+            allowNull:false
         },
     },{
         modelName: 'Post',
