@@ -33,12 +33,12 @@ exports.signup = (req, res, next) => {
           })
           .then( (user) =>{
               res.status(201).json({
-                userId: user.id,
+                user_id: user.id,
                 email:user.email,
                 pseudo: user.pseudo,
                 moderator: user.moderator,
                 token: jwt.sign(
-                    { userId: user.id},
+                    { user_id: user.id},
                     `${env.token}`,
                     {expiresIn: '24h'}
                 )
@@ -82,12 +82,12 @@ exports.login = (req, res, next) => {
             return res.status(202).json('Mot de passe incorrect');
           }
           res.status(201).json({
-            userId: user.id,
+            user_id: user.id,
             email:user.email,
             pseudo: user.pseudo,
             moderator: user.moderator,
             token: jwt.sign(
-                { userId: user.id},
+                { user_id: user.id},
                 `${env.token}`,
                 {expiresIn: '24h'}
             )
@@ -104,13 +104,13 @@ exports.login = (req, res, next) => {
   }
 };
 
-exports.profil = (req, res, next) => {
+exports.changePwd = (req, res, next) => {
   let validInput = [];
   validInput.push(req.body.oldpassword.match(regexPass), req.body.newpassword.match(regexPass));
 
-  if ( (validInput[0] && validInput[1]!= null) && (Number.isInteger(req.body.userId)) ){
+  if ( (validInput[0] && validInput[1]!= null) && (Number.isInteger(req.body.user_id)) ){
     User.findOne({
-      where: { id: req.body.userId }
+      where: { id: req.body.user_id }
     })
     .then((user) => {
       if(!user){
@@ -124,7 +124,7 @@ exports.profil = (req, res, next) => {
         bcrypt.hash(req.body.newpassword,10)
         .then((hash)=>{
           User.update({password: hash},
-            {where: {id: req.body.userId}}
+            {where: {id: req.body.user_id}}
             )
           .then((update)=>{
             res.status(201).json(update)
@@ -141,7 +141,7 @@ exports.profil = (req, res, next) => {
   }
 };
 
-exports.deluser = (req, res, next) => {
+exports.delUser = (req, res, next) => {
   let idToDel = parseInt(req.params.id);
   if(Number.isInteger(idToDel)){
     User.destroy(
@@ -152,7 +152,7 @@ exports.deluser = (req, res, next) => {
     })
     .catch((error)=> res.status(500).json({ error }))
   }else{
-    res.status(401).json('erreur de transfert')
+    res.status(401).json('erreur de requête')
   }
 };
 
@@ -166,7 +166,7 @@ exports.updateModerator = (req, res, next) =>{
         .then((result)=>{
           if(result){
             res.status(200).json({
-              email:result.email,
+              email: result.email,
               pseudo: result.pseudo,
               moderator: result.moderator
             })
@@ -190,10 +190,4 @@ exports.updateModerator = (req, res, next) =>{
     }else{
       return res.status(202).json({ message: 'format de mail incorrect'})
     }
-}
-
-exports.moderator = (req, res, next) =>{
-  if(req.body.action == get && receivedMail.match(regexEmail) != null){
-
-  }
 }
