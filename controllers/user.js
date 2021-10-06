@@ -31,10 +31,11 @@ exports.signup = (req, res, next) => {
             password: hash,
             moderator: 0
           })
-          .then( (user) =>{
+          .then((user) =>{
+            console.log(user)
               res.status(201).json({
                 user_id: user.id,
-                email:user.email,
+                email: user.email,
                 pseudo: user.pseudo,
                 moderator: user.moderator,
                 token: jwt.sign(
@@ -89,7 +90,7 @@ exports.login = (req, res, next) => {
             token: jwt.sign(
                 { user_id: user.id},
                 `${env.token}`,
-                {expiresIn: '24h'}
+                {expiresIn: '10h'}
             )
           })
         }) 
@@ -170,8 +171,9 @@ exports.updateModerator = (req, res, next) =>{
               pseudo: result.pseudo,
               moderator: result.moderator
             })
+          }else{
+            return res.status(202).json({message: 'Utilisateur introuvable'})
           }
-          return res.status(202).json({message: 'Utilisateur introuvable'})
         })
         .catch((error)=> res.status(500).json({ error }))
       }else if(req.body.action == 'put'){

@@ -7,11 +7,11 @@ module.exports = (sequelize, Sequelize) => {
             allowNull:false
         },
         title: {
-            type: Sequelize.STRING(255),
+            type: Sequelize.STRING(50),
             allowNull:false
         },
         message: {
-            type: Sequelize.STRING(255),
+            type: Sequelize.TEXT,
             allowNull:false
         },
         url_image: {
