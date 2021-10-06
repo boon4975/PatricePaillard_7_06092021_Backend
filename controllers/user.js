@@ -32,7 +32,6 @@ exports.signup = (req, res, next) => {
             moderator: 0
           })
           .then((user) =>{
-            console.log(user)
               res.status(201).json({
                 user_id: user.id,
                 email: user.email,
