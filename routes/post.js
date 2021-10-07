@@ -3,4 +3,6 @@ module.exports = function(routePost) {
     //const auth = require('../middleware/auth');
     routePost.post('/api/post', post.createPost);
     routePost.get('/api/post', post.getAllPosts);
+    routePost.get('/api/post/:id', post.getOnePost);
+    routePost.put('/api/post', post.updatePost);
 }

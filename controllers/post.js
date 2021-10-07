@@ -1,8 +1,7 @@
 const { sequelize } = require('../config/db.config');
 const db = require('../config/db.config');
-const post = require('../models/post');
 const Post = db.post;
-const User = db.user
+const User = db.user;
 
 exports.createPost = (req, res) => {
     Post.create({
@@ -24,4 +23,29 @@ exports.getAllPosts = (req, res, next) => {
     .then((result)=>{
         res.status(200).json(result)
     })
+}
+
+exports.getOnePost = (req, res, next) => {
+    Post.findOne({
+        where: {id: req.params.id}
+    })
+    .then((post) =>{
+        if(post){
+            res.status(200).json(post)
+        }else{
+            res.status(202).json('Post non trouvé')
+        }
+    })
+    .catch((error) => res.status(500).json({ error }))
+}
+
+exports.updatePost = (req, res, next) => {
+    Post.update(
+        {title: req.body.title, message: req.body.message},
+        {where: {id: req.body.postId}}
+    )
+    .then((post) => {
+        res.status(201).json(post)
+    })
+    .catch((error) => res.status(500).json({ error }))
 }

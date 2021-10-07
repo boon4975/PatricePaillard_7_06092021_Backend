@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const env = require("../config/env");
 const User = db.user;
-const Post = db.post;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
