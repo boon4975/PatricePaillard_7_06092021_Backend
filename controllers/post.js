@@ -23,7 +23,7 @@ exports.getAllPosts = (req, res, next) => {
     .then((result)=>{
         res.status(200).json(result)
     })
-}
+};
 
 exports.getOnePost = (req, res, next) => {
     Post.findOne({
@@ -37,7 +37,7 @@ exports.getOnePost = (req, res, next) => {
         }
     })
     .catch((error) => res.status(500).json({ error }))
-}
+};
 
 exports.updatePost = (req, res, next) => {
     Post.update(
@@ -48,4 +48,19 @@ exports.updatePost = (req, res, next) => {
         res.status(201).json(post)
     })
     .catch((error) => res.status(500).json({ error }))
+};
+
+exports.delPost = (req, res, next) => {
+    let idToDel = parseInt(req.params.id);
+    if(Number.isInteger(idToDel)){
+        Post.destroy(
+        {where: {id: idToDel}}
+        )
+        .then((result) => {
+        res.status(201).json(result)
+        })
+        .catch((error)=> res.status(500).json({ error }))
+    }else{
+        res.status(401).json('erreur de requête')
+    }
 }

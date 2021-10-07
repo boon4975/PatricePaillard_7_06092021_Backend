@@ -5,4 +5,5 @@ module.exports = function(routePost) {
     routePost.get('/api/post', post.getAllPosts);
     routePost.get('/api/post/:id', post.getOnePost);
     routePost.put('/api/post', post.updatePost);
+    routePost.delete('/api/post/:id', post.delPost);
 }
