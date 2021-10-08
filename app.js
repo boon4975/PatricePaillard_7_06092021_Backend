@@ -16,8 +16,14 @@ const db = require('./config/db.config');
 //relation des tables
 const User = db.user;
 const Post = db.post;
+const Comment = db.comment;
 User.hasMany(Post, {onDelete: 'cascade'});
 Post.belongsTo(User)
+
+Post.hasMany(Comment, {onDelete: 'cascade'})
+Comment.belongsTo(Post)
+
+User.hasOne(Comment)
 
 //synchro & création des tables
 db.sequelize.sync() //{ force: true }
@@ -28,6 +34,7 @@ db.sequelize.sync() //{ force: true }
 //routes API
 require('./routes/user')(app);
 require('./routes/post')(app);
+require('./routes/comment')(app);
 
 module.exports = app;
 

@@ -3,7 +3,7 @@ const db = require('../config/db.config');
 const Post = db.post;
 const User = db.user;
 
-exports.createPost = (req, res) => {
+exports.createPost = (req, res, next) => {
     Post.create({
         title: req.body.title,
         message: req.body.message,
