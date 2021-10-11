@@ -88,7 +88,7 @@ exports.login = (req, res, next) => {
             token: jwt.sign(
                 { user_id: user.id},
                 `${env.token}`,
-                {expiresIn: '10h'}
+                {expiresIn: '24h'}
             )
           })
         }) 
