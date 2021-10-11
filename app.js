@@ -23,7 +23,8 @@ Post.belongsTo(User)
 Post.hasMany(Comment, {onDelete: 'cascade'})
 Comment.belongsTo(Post)
 
-User.hasOne(Comment)
+User.hasMany(Comment)
+Comment.belongsTo(User)
 
 //synchro & création des tables
 db.sequelize.sync() //{ force: true }

@@ -2,6 +2,7 @@ const { sequelize } = require('../config/db.config');
 const db = require('../config/db.config');
 const Post = db.post;
 const User = db.user;
+const Comment = db.comment;
 
 exports.createPost = (req, res, next) => {
     Post.create({
@@ -18,7 +19,7 @@ exports.createPost = (req, res, next) => {
 exports.getAllPosts = (req, res, next) => {
     Post.findAll({
         order:[ ['updatedAt', 'DESC'] ],
-        include: User
+        include: {all: true, nested: true}
     })
     .then((result)=>{
         res.status(200).json(result)

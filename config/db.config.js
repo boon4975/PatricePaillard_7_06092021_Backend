@@ -6,7 +6,6 @@ const sequelizeCnx = new Sequelize(env.database, env.username, env.password, {
   host: env.host,
   dialect: env.dialect,
   dialectOptions: {
-    useUTC: false,
     dateStrings: true,
     typeCast: true
   },

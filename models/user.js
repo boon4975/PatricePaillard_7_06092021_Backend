@@ -7,17 +7,17 @@ module.exports = (sequelize, Sequelize) => {
             allowNull:false
         },
         pseudo: {
-            type: Sequelize.STRING(255),
+            type: Sequelize.STRING(20),
             unique: true,
             allowNull:false
         },
         email: {
-            type: Sequelize.STRING(255),
+            type: Sequelize.STRING(50),
             unique: true,
             allowNull:false
         },
         password: {
-            type: Sequelize.STRING(255),
+            type: Sequelize.STRING(64),
             allowNull:false
         },
         moderator: {
