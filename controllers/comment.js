@@ -2,6 +2,10 @@ const db = require('../config/db.config');
 const Sequelize = require("sequelize");
 const Comment = db.comment;
 
+
+/**
+ * Ajoute un commentaire
+ */
 exports.addComment = (req, res, next) => {
     Comment.create({
         post_id: req.body.post_id,
@@ -14,6 +18,9 @@ exports.addComment = (req, res, next) => {
     .catch(error => res.status(401).json({ error }))
 };
 
+/**
+ * Met à jour un commentaire
+ */
 exports.updateComment = (req, res, next) => {
     Comment.update(
         {message: req.body.message},
@@ -25,7 +32,9 @@ exports.updateComment = (req, res, next) => {
     .catch((error)=> res.status(500).json({ error }))
 }
 
-
+/**
+ * Retourne le commentaire spécifié
+ */
 exports.getComment = (req, res, next) => {
     Comment.findOne({
         where: {id: req.params.id}
@@ -36,6 +45,9 @@ exports.getComment = (req, res, next) => {
     .catch((error)=> res.status(500).json({ error }))
 }
 
+/**
+ * Supprime le commentaire spécifié
+ */
 exports.delComment = (req, res, next) => {
     let idToDel = parseInt(req.params.id);
     if(Number.isInteger(idToDel)){

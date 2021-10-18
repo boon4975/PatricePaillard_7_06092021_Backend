@@ -10,6 +10,12 @@ const regexEmail = /^[a-z0-9][a-z0-9._-]+@[a-z0-9._-]{2,}\.([a-z]{2,4})$/;
 const regexPass = /((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[.:'!@#$%&*_+=|(){}[?\-\]\/\\])(?!.*[<>`])).{8,}/;
 const regexPseudo = /(^[a-zA-Z0-9_-]).{3,}/;
 
+/**
+ * Création de compte
+ * valide la saisie utilisateur via REGEX
+ * vérifie l'unicité email et pseudo
+ * HASH du mot de passe
+ */
 exports.signup = (req, res, next) => {
   let inputEmail = req.body.email;
   let inputPseudo = req.body.pseudo.toLowerCase();
@@ -62,6 +68,11 @@ exports.signup = (req, res, next) => {
   }
 };
 
+/**
+ * connexion de compte
+ * valide la saisie utilisateur via REGEX
+ * vérifie email et mot de passe Hash
+ */
 exports.login = (req, res, next) => {
   let inputEmail = req.body.email;
   let inputPwd = req.body.password;
@@ -103,6 +114,12 @@ exports.login = (req, res, next) => {
   }
 };
 
+/**
+ * Changement de mot de passe de compte
+ * valide la saisie utilisateur via REGEX
+ * vérifie email et ancien mot de pas
+ * HASH du nouveau mot de passe
+ */
 exports.changePwd = (req, res, next) => {
   let validInput = [];
   validInput.push(req.body.oldpassword.match(regexPass), req.body.newpassword.match(regexPass));
@@ -140,6 +157,10 @@ exports.changePwd = (req, res, next) => {
   }
 };
 
+/**
+ * Suppression de compte
+ *
+ */
 exports.delUser = (req, res, next) => {
   let idToDel = parseInt(req.params.id);
   if(Number.isInteger(idToDel)){
@@ -155,6 +176,11 @@ exports.delUser = (req, res, next) => {
   }
 };
 
+/**
+ * Gestion du mode Modérateur
+ * action GET => retourne les infos du compte spécifié
+ * action PUT => change la valeur BOOLEEN du paramètre Moderator du compte
+ */
 exports.updateModerator = (req, res, next) =>{
   let receivedMail = req.body.email;
     if(receivedMail.match(regexEmail) != null){

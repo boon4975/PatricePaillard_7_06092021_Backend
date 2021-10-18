@@ -9,6 +9,7 @@ app.use((req, res, next) => {
     next();
   });
 app.use(bodyParser.json());
+app.use(express.static('assets'))
 
 // connexion DB MySql
 const db = require('./config/db.config');
@@ -23,7 +24,7 @@ Post.belongsTo(User)
 Post.hasMany(Comment, {onDelete: 'cascade'})
 Comment.belongsTo(Post)
 
-User.hasMany(Comment)
+User.hasMany(Comment, {onDelete: 'cascade'})
 Comment.belongsTo(User)
 
 //synchro & création des tables
@@ -35,6 +36,7 @@ db.sequelize.sync() //{ force: true }
 //routes API
 require('./routes/user')(app);
 require('./routes/post')(app);
+require('./routes/pix')(app);
 require('./routes/comment')(app);
 
 module.exports = app;

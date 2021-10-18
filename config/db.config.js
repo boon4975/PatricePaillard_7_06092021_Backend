@@ -2,6 +2,7 @@ const env = require("./env.js");
 
 const Sequelize = require("sequelize");
 
+//connexion BDD
 const sequelizeCnx = new Sequelize(env.database, env.username, env.password, {
   host: env.host,
   dialect: env.dialect,
