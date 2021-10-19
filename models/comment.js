@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey:true,
             allowNull:false
         },
-        post_id: {
+        topic_id: {
             type: Sequelize.INTEGER.UNSIGNED,
             allowNull:false
         },

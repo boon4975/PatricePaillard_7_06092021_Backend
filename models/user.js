@@ -23,7 +23,10 @@ module.exports = (sequelize, Sequelize) => {
         moderator: {
             type: Sequelize.BOOLEAN,
             default: false
-        }
+        },
+        url_image: {
+            type: Sequelize.STRING(255)
+        },
     },{
         modelName: 'User',
         timestamps: false,

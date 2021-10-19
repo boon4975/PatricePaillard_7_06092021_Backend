@@ -9,6 +9,7 @@ app.use((req, res, next) => {
     next();
   });
 app.use(bodyParser.json());
+// accès pour affichage des images
 app.use(express.static('assets'))
 
 // connexion DB MySql
@@ -16,13 +17,13 @@ const db = require('./config/db.config');
 
 //relation des tables
 const User = db.user;
-const Post = db.post;
+const Topic = db.topic;
 const Comment = db.comment;
-User.hasMany(Post, {onDelete: 'cascade'});
-Post.belongsTo(User)
+User.hasMany(Topic, {onDelete: 'cascade'});
+Topic.belongsTo(User)
 
-Post.hasMany(Comment, {onDelete: 'cascade'})
-Comment.belongsTo(Post)
+Topic.hasMany(Comment, {onDelete: 'cascade'})
+Comment.belongsTo(Topic)
 
 User.hasMany(Comment, {onDelete: 'cascade'})
 Comment.belongsTo(User)

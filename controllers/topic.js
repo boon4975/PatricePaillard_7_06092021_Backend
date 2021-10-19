@@ -1,14 +1,14 @@
 const { sequelize } = require('../config/db.config');
 const db = require('../config/db.config');
-const Post = db.post;
+const Topic = db.topic;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
 /**
- * Retourne les 10 derniers Posts
+ * Retourne les 10 derniers Topics
  */
  exports.getLastTopic = (req, res, next) => {
-    Post.findAll({
+    Topic.findAll({
         order:[ ['updatedAt', 'DESC'] ],
         include: {all: true, nested: true},
         limit: 5
@@ -21,7 +21,7 @@ const Op = Sequelize.Op;
  * Retourne tous les Posts
  */
 exports.getAllPost = (req, res, next) => {
-    Post.findAll({
+    Topic.findAll({
         order:[ ['updatedAt', 'DESC'] ],
         include: {all: true, nested: true},
         where: {url_image:
@@ -36,7 +36,7 @@ exports.getAllPost = (req, res, next) => {
  * Retourne tous les Pix
  */
  exports.getAllPix = (req, res, next) => {
-    Post.findAll({
+    Topic.findAll({
         order:[ ['updatedAt', 'DESC'] ],
         include: {all: true, nested: true},
         where: {url_image:
@@ -51,7 +51,7 @@ exports.getAllPost = (req, res, next) => {
  * Retourne le topic spécifié
  */
 exports.getOneTopic = (req, res, next) => {
-    Post.findOne({
+    Topic.findOne({
         where: {id: req.params.id}
     })
     .then((post) =>{
@@ -68,7 +68,7 @@ exports.getOneTopic = (req, res, next) => {
  */
 exports.createTopic = (req, res, next) => {
     if(!req.file){
-        Post.create({
+        Topic.create({
             title: req.body.title,
             message: req.body.message,
             user_id: req.body.user_id
@@ -79,7 +79,7 @@ exports.createTopic = (req, res, next) => {
         .catch(error => res.status(401).json({ error }))
     }else{
         let imageUrl= `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        Post.create({
+        Topic.create({
             title: req.body.title,
             message: req.body.message,
             user_id: req.body.user_id,
@@ -97,7 +97,7 @@ exports.createTopic = (req, res, next) => {
 exports.updateTopic = (req, res, next) => {
     let imageUrl = req.body.urlimage;
     if(!req.file){
-        Post.update(
+        Topic.update(
             {title: req.body.title, message: req.body.message},
             {where: {id: req.body.postId}}
         )
@@ -107,7 +107,7 @@ exports.updateTopic = (req, res, next) => {
         .catch((error) => res.status(500).json({ error }))
     }else{
         imageUrl= `${req.protocol}://${req.get('host')}/images/${req.file.filename}`    
-        Post.update(
+        Topic.update(
             {title: req.body.title, message: req.body.message,url_image: imageUrl},
             {where: {id: req.body.postId}}
         )
@@ -118,12 +118,12 @@ exports.updateTopic = (req, res, next) => {
     }
 };
 /**
- * Supprime le post spécifié
+ * Supprime le Topic spécifié
  */
 exports.delTopic = (req, res, next) => {
     let idToDel = parseInt(req.params.id);
     if(Number.isInteger(idToDel)){
-        Post.destroy(
+        Topic.destroy(
         {where: {id: idToDel}}
         )
         .then((result) => {

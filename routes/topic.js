@@ -1,15 +1,15 @@
 module.exports = function(routeTopic) {
-    const post = require('../controllers/topic');
+    const topic = require('../controllers/topic');
     const auth = require('../middleware/auth');
     const multer = require('../middleware/multer-config');
 // route GET
-    routeTopic.get('/api/lasttopic', auth, post.getLastTopic);
-    routeTopic.get('/api/allpost', auth, post.getAllPost);
-    routeTopic.get('/api/allpix', auth, post.getAllPix);
-    routeTopic.get('/api/topic/:id', auth, post.getOneTopic);
+    routeTopic.get('/api/lasttopic', auth, topic.getLastTopic);
+    routeTopic.get('/api/allpost', auth, topic.getAllPost);
+    routeTopic.get('/api/allpix', auth, topic.getAllPix);
+    routeTopic.get('/api/topic/:id', auth, topic.getOneTopic);
 // route de Modification
-    routeTopic.post('/api/topic', auth, multer, post.createTopic);
-    routeTopic.put('/api/topic', auth, multer, post.updateTopic);
-    routeTopic.delete('/api/topic/:id', auth, post.delTopic);
+    routeTopic.post('/api/topic', auth, multer, topic.createTopic);
+    routeTopic.put('/api/topic', auth, multer, topic.updateTopic);
+    routeTopic.delete('/api/topic/:id', auth, topic.delTopic);
 
 }

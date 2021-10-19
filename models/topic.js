@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const PostModel = sequelize.define('post', {
+    const TopicModel = sequelize.define('topic', {
         id: {
             type: Sequelize.INTEGER.UNSIGNED,
             autoIncrement: true,
@@ -22,10 +22,10 @@ module.exports = (sequelize, Sequelize) => {
             allowNull:false
         },
     },{
-        modelName: 'Post',
+        modelName: 'Topic',
         timestamps: true,
         underscored: true
     }  
     )
-    return PostModel;
+    return TopicModel;
 };

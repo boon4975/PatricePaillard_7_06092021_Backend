@@ -19,7 +19,7 @@ db.sequelize = sequelizeCnx;
 
 //Models
 db.user = require('../models/user') (sequelizeCnx, Sequelize);
-db.post = require('../models/post') (sequelizeCnx, Sequelize);
+db.topic = require('../models/topic') (sequelizeCnx, Sequelize);
 db.comment = require('../models/comment') (sequelizeCnx, Sequelize);
 
 module.exports = db;

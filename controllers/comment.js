@@ -8,7 +8,7 @@ const Comment = db.comment;
  */
 exports.addComment = (req, res, next) => {
     Comment.create({
-        post_id: req.body.post_id,
+        topic_id: req.body.post_id,
         user_id: req.body.user_id,
         message: req.body.message
     })
