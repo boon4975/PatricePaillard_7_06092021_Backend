@@ -18,7 +18,7 @@ const regexPseudo = /(^[a-zA-Z0-9_-]).{3,}/;
  */
 exports.signup = (req, res, next) => {
   let inputEmail = req.body.email;
-  let inputPseudo = req.body.pseudo.toLowerCase();
+  let inputPseudo = req.body.pseudo;
   let inputPwd = req.body.password;
   let validInput = [];
   validInput.push(inputEmail.match(regexEmail),inputPwd.match(regexPass),inputPseudo.match(regexPseudo));
@@ -42,6 +42,7 @@ exports.signup = (req, res, next) => {
                 email: user.email,
                 pseudo: user.pseudo,
                 moderator: user.moderator,
+                url_image: user.url_image,
                 token: jwt.sign(
                     { user_id: user.id},
                     `${env.token}`,
@@ -52,7 +53,7 @@ exports.signup = (req, res, next) => {
           .catch((error)=> res.status(500).json({ error }))
         })
         .catch((error)=> res.status(500).json({ error })) 
-      }else if(result.pseudo === inputPseudo){
+      }else if(result.pseudo.toLowerCase() == inputPseudo.toLowerCase()){
         res.status(202).json('Pseudo déjà utilisé');
       }else{
         res.status(202).json('Email déjà utilisé');
@@ -96,6 +97,7 @@ exports.login = (req, res, next) => {
             email:user.email,
             pseudo: user.pseudo,
             moderator: user.moderator,
+            url_image: user.url_image,
             token: jwt.sign(
                 { user_id: user.id},
                 `${env.token}`,
@@ -216,4 +218,24 @@ exports.updateModerator = (req, res, next) =>{
     }else{
       return res.status(202).json({ message: 'format de mail incorrect'})
     }
+};
+
+/**
+ * Upload de l'image Avatar
+ */
+exports.avatar = (req, res, next) => {
+  imageUrl= `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  User.update(
+    {url_image: imageUrl},
+    {where: {id: req.body.id}}
+  )
+  .then(()=> {
+    User.findOne(
+      {where: {id: req.body.id}}
+    )
+    .then((user)=> {
+      res.status(201).json(user.url_image)
+    })
+  })
+  .catch((error)=> res.status(500).json({ error }))
 }
