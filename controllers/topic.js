@@ -3,6 +3,7 @@ const db = require('../config/db.config');
 const Topic = db.topic;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
+const fs = require('fs');
 
 /**
  * Retourne les 10 derniers Topics
@@ -106,17 +107,26 @@ exports.updateTopic = (req, res, next) => {
         })
         .catch((error) => res.status(500).json({ error }))
     }else{
-        imageUrl= `${req.protocol}://${req.get('host')}/images/${req.file.filename}`    
-        Topic.update(
-            {title: req.body.title, message: req.body.message,url_image: imageUrl},
-            {where: {id: req.body.postId}}
-        )
-        .then((result)=> {
-            res.status(201).json(result)
+        Topic.findOne({where:{id:req.body.postId}})
+        .then((topic)=>{
+            const filename = topic.url_image.split('/images/')[1];
+            imageUrl= `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+            fs.unlink(`assets/images/${filename}`, ()=>{
+                Topic.update(
+                    {title: req.body.title, message: req.body.message,url_image: imageUrl},
+                    {where: {id: req.body.postId}}
+                )
+                .then((result)=> {
+                    res.status(201).json(result)
+                })
+                .catch((error)=> res.status(500).json({ error }))
+            })
         })
-        .catch((error)=> res.status(500).json({ error }))
+        .catch((error) => res.status(500).json({ error }))
     }
 };
+    
+            
 /**
  * Supprime le Topic spécifié
  */

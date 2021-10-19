@@ -5,6 +5,7 @@ const env = require("../config/env");
 const User = db.user;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
+const fs = require('fs');
 
 const regexEmail = /^[a-z0-9][a-z0-9._-]+@[a-z0-9._-]{2,}\.([a-z]{2,4})$/;
 const regexPass = /((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[.:'!@#$%&*_+=|(){}[?\-\]\/\\])(?!.*[<>`])).{8,}/;
@@ -222,20 +223,31 @@ exports.updateModerator = (req, res, next) =>{
 
 /**
  * Upload de l'image Avatar
+ * supprime l'ancien image du dossier assets/images
  */
 exports.avatar = (req, res, next) => {
-  imageUrl= `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  User.update(
-    {url_image: imageUrl},
-    {where: {id: req.body.id}}
-  )
-  .then(()=> {
-    User.findOne(
-      {where: {id: req.body.id}}
-    )
-    .then((user)=> {
-      res.status(201).json(user.url_image)
+  User.findOne({where: {id:req.body.id}})
+    .then((user)=>{
+      const filename = user.url_image.split('/images/')[1];
+      imageUrl= `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+      fs.unlink(`assets/images/${filename}`, ()=>{
+        User.update(
+          {url_image: imageUrl},
+          {where: {id: req.body.id}}
+        )
+        .then(()=> {
+          User.findOne(
+            {where: {id: req.body.id}}
+          )
+          .then((user)=> {
+            res.status(201).json(user.url_image)
+          })
+        })
+        .catch((error)=> res.status(500).json({ error }))
+        })
     })
-  })
-  .catch((error)=> res.status(500).json({ error }))
+    .catch((error)=> res.status(500).json({ error }))
+
+      
+      
 }
