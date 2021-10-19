@@ -35,8 +35,7 @@ db.sequelize.sync() //{ force: true }
 
 //routes API
 require('./routes/user')(app);
-require('./routes/post')(app);
-require('./routes/pix')(app);
+require('./routes/topic')(app);
 require('./routes/comment')(app);
 
 module.exports = app;
