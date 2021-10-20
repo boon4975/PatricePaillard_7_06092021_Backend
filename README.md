@@ -4,7 +4,7 @@
 Base de données MySQL
 
 ## Installation du Projet
-Cloner le BACKEND
+Cloner dans un dossier BACKEND à la racine du dossier Projet
 Exécuter 
     npm install
 
