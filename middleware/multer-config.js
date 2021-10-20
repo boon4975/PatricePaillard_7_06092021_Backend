@@ -8,7 +8,7 @@ const MIME_TYPES = {
 }
 
 /**
- * Enregistre un fichier image dans le dossier ASSERS/IMAGES 
+ * Enregistre un fichier image dans le dossier ASSETS/IMAGES 
  * ajout d'un timestamp dans le nom de fichier pour etre unique
  */
 const storage = multer.diskStorage({

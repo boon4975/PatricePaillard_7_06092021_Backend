@@ -40,5 +40,3 @@ require('./routes/topic')(app);
 require('./routes/comment')(app);
 
 module.exports = app;
-
-//groupomania

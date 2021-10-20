@@ -73,7 +73,7 @@ exports.signup = (req, res, next) => {
 };
 
 /**
- * connexion de compte
+ * connexion au compte
  * valide la saisie utilisateur via REGEX
  * vérifie email et mot de passe Hash
  */

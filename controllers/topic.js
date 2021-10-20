@@ -65,7 +65,8 @@ exports.getOneTopic = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }))
 };
 /**
- * 
+ * Création d'un nouveau Topic (POST ou PIX)
+ * en fonction de la présence d'une fichier joint ou pas
  */
 exports.createTopic = (req, res, next) => {
     if(!req.file){
@@ -93,7 +94,8 @@ exports.createTopic = (req, res, next) => {
         }
 };
 /**
- * Update Topic
+ * Update Topic (POST ou PIX)
+ * en fonction de la présence d'une fichier joint ou pas
  */
 exports.updateTopic = (req, res, next) => {
     let imageUrl = req.body.urlimage;
@@ -125,10 +127,8 @@ exports.updateTopic = (req, res, next) => {
         .catch((error) => res.status(500).json({ error }))
     }
 };
-    
-            
 /**
- * Supprime le Topic spécifié
+ * Supprime le Topic spécifié et son image pour les PIX
  */
 exports.delTopic = (req, res, next) => {
     let idToDel = parseInt(req.params.id);
