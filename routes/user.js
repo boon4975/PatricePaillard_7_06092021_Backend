@@ -8,6 +8,6 @@ module.exports = function(routeUser) {
 //route gestion Profil
     routeUser.put('/api/auth/setpwd', auth, user.changePwd);
     routeUser.put('/api/auth/avatar', auth, multer, user.avatar);
-    routeUser.delete('/api/auth/profil/:id', auth, user.delUser);
-    routeUser.put('/api/auth/profil/moderator', auth, user.updateModerator)
+    routeUser.delete('/api/auth/profil/:id', auth, user.delAccount);
+    routeUser.put('/api/auth/profil/moderator', auth, user.updateModerator);
 }

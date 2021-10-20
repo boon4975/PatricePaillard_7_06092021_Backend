@@ -132,15 +132,26 @@ exports.updateTopic = (req, res, next) => {
  */
 exports.delTopic = (req, res, next) => {
     let idToDel = parseInt(req.params.id);
-    if(Number.isInteger(idToDel)){
-        Topic.destroy(
-        {where: {id: idToDel}}
-        )
-        .then((result) => {
-        res.status(201).json(result)
-        })
-        .catch((error)=> res.status(500).json({ error }))
-    }else{
-        res.status(401).json('erreur de requête')
-    }
+    Topic.findOne({where: {id:idToDel}})
+    .then((topic)=>{
+        if(topic.url_image){
+            const filename = topic.url_image.split('/images/')[1];
+            fs.unlink(`assets/images/${filename}`, ()=>{
+              Topic.destroy({where:{id:idToDel}})
+              .then(()=>{
+                res.status(201).json('topic et image supprimés')
+              })
+              .catch((error)=> res.status(500).json({ error }))
+            }) 
+        }else{
+            Topic.destroy(
+              {where: {id: idToDel}}
+            )
+            .then(() => {
+              res.status(201).json('compte supprimé')
+            })
+            .catch((error)=> res.status(500).json({ error }))
+          }
+    })
+    .catch((error)=> res.status(500).json({ error }))
 }

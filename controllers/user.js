@@ -6,6 +6,8 @@ const User = db.user;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const fs = require('fs');
+const { url } = require('inspector');
+const Topic = db.topic;
 
 const regexEmail = /^[a-z0-9][a-z0-9._-]+@[a-z0-9._-]{2,}\.([a-z]{2,4})$/;
 const regexPass = /((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[.:'!@#$%&*_+=|(){}[?\-\]\/\\])(?!.*[<>`])).{8,}/;
@@ -162,21 +164,48 @@ exports.changePwd = (req, res, next) => {
 
 /**
  * Suppression de compte
- *
+ * Suppression de l'avatar si présent
+ * Suppression des images des Topics du user
  */
-exports.delUser = (req, res, next) => {
+exports.delAccount = (req, res, next) => {
   let idToDel = parseInt(req.params.id);
-  if(Number.isInteger(idToDel)){
-    User.destroy(
-      {where: {id: idToDel}}
-    )
-    .then((result) => {
-      res.status(201).json(result)
-    })
-    .catch((error)=> res.status(500).json({ error }))
-  }else{
-    res.status(401).json('erreur de requête')
-  }
+  User.findOne({ //retourne les url avatar et des topics du user
+    where: {id:req.params.id},
+    attributes: ['url_image'],
+    include: {
+      model: Topic,
+      attributes: ['url_image']
+    }
+  })
+  .then((user)=>{
+    if(user.url_image){ // image avatar => suppression
+      const filename = user.url_image.split('/images/')[1];
+      fs.unlink(`assets/images/${filename}`, ()=>{
+        console.log('suppression image avatar')
+      })
+    };
+    // tableau des url des posts du User
+    let tab = Object.values(user.topics);
+    if(tab.length > 0){
+      const filename = '';
+      for(value of tab){ // boucle de suppression des images
+        let url = new String(value.dataValues.url_image)
+        let filename = url.split('/images/')[1]
+        if(filename){
+          fs.unlink(`assets/images/${filename}`, ()=>{
+            console.log('suppression de ' + filename)
+          })
+        }
+      };
+    };
+  //suppression du compte
+    User.destroy({where:{id:idToDel}})
+        .then(()=>{
+          res.status(201).json('compte, images topic et avatar supprimés')
+        })
+        .catch((error)=> res.status(500).json({ error }))
+  })
+  .catch((error)=> res.status(401).json({ error }))
 };
 
 /**
@@ -246,8 +275,5 @@ exports.avatar = (req, res, next) => {
         .catch((error)=> res.status(500).json({ error }))
         })
     })
-    .catch((error)=> res.status(500).json({ error }))
-
-      
-      
-}
+    .catch((error)=> res.status(500).json({ error })) 
+};
