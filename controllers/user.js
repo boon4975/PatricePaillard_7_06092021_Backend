@@ -5,8 +5,7 @@ const env = require("../config/env");
 const User = db.user;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
-const fs = require('fs');
-const { url } = require('inspector');
+const fs = require('fs')
 const Topic = db.topic;
 
 const regexEmail = /^[a-z0-9][a-z0-9._-]+@[a-z0-9._-]{2,}\.([a-z]{2,4})$/;
@@ -37,7 +36,8 @@ exports.signup = (req, res, next) => {
             pseudo: inputPseudo,
             email: inputEmail,
             password: hash,
-            moderator: 0
+            moderator: 0,
+            url_image: 'http://192.168.1.21:3000/default_user.png'
           })
           .then((user) =>{
               res.status(201).json({
@@ -257,23 +257,29 @@ exports.updateModerator = (req, res, next) =>{
 exports.avatar = (req, res, next) => {
   User.findOne({where: {id:req.body.id}})
     .then((user)=>{
-      const filename = user.url_image.split('/images/')[1];
-      imageUrl= `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-      fs.unlink(`assets/images/${filename}`, ()=>{
-        User.update(
-          {url_image: imageUrl},
-          {where: {id: req.body.id}}
-        )
-        .then(()=> {
-          User.findOne(
+      if(user.url_image){
+        const previous = user.url_image.split('/images/')[1];
+        imageUrl= `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+        fs.unlink(`assets/images/${previous}`, ()=>{
+          User.update(
+            {url_image: imageUrl},
             {where: {id: req.body.id}}
           )
-          .then((user)=> {
-            res.status(201).json(user.url_image)
+          .then(()=> {
+            res.status(201).json(imageUrl)
           })
+          .catch((error)=> res.status(500).json({ error }))
+          })
+      }else{
+        User.update(
+            {url_image: imageUrl},
+            {where: {id: req.body.id}}
+          )
+        .then(()=> {
+          res.status(201).json(imageUrl)
         })
         .catch((error)=> res.status(500).json({ error }))
-        })
+      };
     })
-    .catch((error)=> res.status(500).json({ error })) 
+    .catch((error)=> res.status(400).json({ error })) 
 };
