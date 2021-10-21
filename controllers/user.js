@@ -255,7 +255,7 @@ exports.updateModerator = (req, res, next) =>{
  * supprime l'ancien image du dossier assets/images
  */
 exports.avatar = (req, res, next) => {
-  User.findOne({where: {id:req.body.id}})
+  User.findOne({where: {id:req.body.user_id}})
     .then((user)=>{
       if(user.url_image){
         const previous = user.url_image.split('/images/')[1];
@@ -263,7 +263,7 @@ exports.avatar = (req, res, next) => {
         fs.unlink(`assets/images/${previous}`, ()=>{
           User.update(
             {url_image: imageUrl},
-            {where: {id: req.body.id}}
+            {where: {id: req.body.user_id}}
           )
           .then(()=> {
             res.status(201).json(imageUrl)
@@ -273,7 +273,7 @@ exports.avatar = (req, res, next) => {
       }else{
         User.update(
             {url_image: imageUrl},
-            {where: {id: req.body.id}}
+            {where: {id: req.body.user_id}}
           )
         .then(()=> {
           res.status(201).json(imageUrl)
