@@ -12,6 +12,8 @@ Renommer le fichier env.js.example en env.js
 Configurer votre environnement => conf/env.js
     renommer avec vos paramètres les variables %VAR
 
+Créer le sous-dossier assets/images
+
 ## Lancement du serveur
 Exécuter
     nodemon serve
