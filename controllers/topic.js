@@ -90,7 +90,7 @@ exports.createTopic = (req, res, next) => {
         .then((result)=> {
             res.status(201).json(result)
         })
-        .catch((error)=> res.status(500).json({ error }))
+        .catch((error)=> res.status(501).json({ error }))
         }
 };
 /**
@@ -107,7 +107,7 @@ exports.updateTopic = (req, res, next) => {
         .then((post) => {
             res.status(201).json(post)
         })
-        .catch((error) => res.status(500).json({ error }))
+        .catch((error) => res.status(501).json({ error }))
     }else{
         Topic.findOne({where:{id:req.body.postId}})
         .then((topic)=>{
@@ -121,10 +121,10 @@ exports.updateTopic = (req, res, next) => {
                 .then((result)=> {
                     res.status(201).json(result)
                 })
-                .catch((error)=> res.status(500).json({ error }))
+                .catch((error)=> res.status(501).json({ error }))
             })
         })
-        .catch((error) => res.status(500).json({ error }))
+        .catch((error) => res.status(501).json({ error }))
     }
 };
 /**
@@ -141,7 +141,7 @@ exports.delTopic = (req, res, next) => {
               .then(()=>{
                 res.status(201).json('topic et image supprimés')
               })
-              .catch((error)=> res.status(500).json({ error }))
+              .catch((error)=> res.status(501).json({ error }))
             }) 
         }else{
             Topic.destroy(
@@ -150,8 +150,8 @@ exports.delTopic = (req, res, next) => {
             .then(() => {
               res.status(201).json('compte supprimé')
             })
-            .catch((error)=> res.status(500).json({ error }))
+            .catch((error)=> res.status(501).json({ error }))
           }
     })
-    .catch((error)=> res.status(500).json({ error }))
+    .catch((error)=> res.status(501).json({ error }))
 }

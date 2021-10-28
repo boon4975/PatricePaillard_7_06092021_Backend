@@ -21,5 +21,19 @@ const storage = multer.diskStorage({
         callback(null, name + Date.now() + '.' + extension);
     }
 });
+const upload = multer({
+    storage: storage,
+    fileFilter(req, file, cb) {
+        if(file.mimetype == 'image/jpg'|| file.mimetype == 'image/jpeg'|| file.mimetype == 'image/png'|| file.mimetype == 'image/gif'){
+            cb(null, true)
+        }else{
+            return cb(new Error({error: 'please uppload an image'}))
+        }   
+    },
+    limits: {
+        fileSize: 1000000
+    },
+})
+//
 
-module.exports = multer({ storage }).single('file');
+module.exports = upload.single('file');

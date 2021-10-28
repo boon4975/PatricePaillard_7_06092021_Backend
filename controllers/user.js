@@ -268,7 +268,7 @@ exports.avatar = (req, res, next) => {
           .then(()=> {
             res.status(201).json(imageUrl)
           })
-          .catch((error)=> res.status(500).json({ error }))
+          .catch((error)=> res.status(501).json({ error }))
           })
       }else{
         User.update(
@@ -278,7 +278,7 @@ exports.avatar = (req, res, next) => {
         .then(()=> {
           res.status(201).json(imageUrl)
         })
-        .catch((error)=> res.status(500).json({ error }))
+        .catch((error)=> res.status(501).json({ error }))
       };
     })
     .catch((error)=> res.status(400).json({ error })) 
