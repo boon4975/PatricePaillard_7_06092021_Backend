@@ -1,6 +1,8 @@
 const db = require('../config/db.config');
 const Sequelize = require("sequelize");
 const Comment = db.comment;
+const Topic = db.topic;
+
 
 
 /**
@@ -8,12 +10,21 @@ const Comment = db.comment;
  */
 exports.addComment = (req, res, next) => {
     Comment.create({
-        topic_id: req.body.post_id,
+        topic_id: req.body.topic_id,
         user_id: req.body.user_id,
         message: req.body.message
     })
     .then( (comment) => {
-        res.status(201).json(comment)
+        let updateComment = new Date()
+        Topic.update(
+            {last_update: updateComment },
+            {where: {id:req.body.topic_id}}
+        )
+        .then(()=>{
+            res.status(201).json(comment)
+        })
+        .catch(error => res.status(401).json({ error }))
+        
     })
     .catch(error => res.status(401).json({ error }))
 };
@@ -26,8 +37,16 @@ exports.updateComment = (req, res, next) => {
         {message: req.body.message},
         {where: {id: req.body.comment_id}}
     )
-    .then((result)=>{
-        res.status(201).json(result)
+    .then((comment)=>{
+        let updateComment = new Date()
+        Topic.update(
+            {last_update: updateComment },
+            {where: {id:req.body.topic_id}}
+        )
+        .then(()=>{
+            res.status(201).json(comment)
+        })
+        .catch(error => res.status(401).json({ error }))
     })
     .catch((error)=> res.status(500).json({ error }))
 }

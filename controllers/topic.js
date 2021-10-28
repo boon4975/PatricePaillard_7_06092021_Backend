@@ -10,7 +10,7 @@ const fs = require('fs');
  */
  exports.getLastTopic = (req, res, next) => {
     Topic.findAll({
-        order:[ ['updatedAt', 'DESC'] ],
+        order:[ ['last_update', 'DESC'] ],
         include: {all: true, nested: true},
         limit: 5
     })
@@ -23,7 +23,7 @@ const fs = require('fs');
  */
 exports.getAllPost = (req, res, next) => {
     Topic.findAll({
-        order:[ ['updatedAt', 'DESC'] ],
+        order:[ ['last_update', 'DESC'] ],
         include: {all: true, nested: true},
         where: {url_image:
             { [Op.is]: null }
@@ -38,7 +38,7 @@ exports.getAllPost = (req, res, next) => {
  */
  exports.getAllPix = (req, res, next) => {
     Topic.findAll({
-        order:[ ['updatedAt', 'DESC'] ],
+        order:[ ['last_update', 'DESC'] ],
         include: {all: true, nested: true},
         where: {url_image:
                     { [Op.ne]: null }
@@ -69,11 +69,13 @@ exports.getOneTopic = (req, res, next) => {
  * en fonction de la présence d'une fichier joint ou pas
  */
 exports.createTopic = (req, res, next) => {
+    let update = new Date();
     if(!req.file){
         Topic.create({
             title: req.body.title,
             message: req.body.message,
-            user_id: req.body.user_id
+            user_id: req.body.user_id,
+            last_update: update
         })
         .then( (user) => {
             res.status(201).json(user)
@@ -85,7 +87,8 @@ exports.createTopic = (req, res, next) => {
             title: req.body.title,
             message: req.body.message,
             user_id: req.body.user_id,
-            url_image: imageUrl
+            url_image: imageUrl,
+            last_update: update
         })
         .then((result)=> {
             res.status(201).json(result)
@@ -98,10 +101,11 @@ exports.createTopic = (req, res, next) => {
  * en fonction de la présence d'une fichier joint ou pas
  */
 exports.updateTopic = (req, res, next) => {
+    let update = new Date();
     let imageUrl = req.body.urlimage;
     if(!req.file){
         Topic.update(
-            {title: req.body.title, message: req.body.message},
+            {title: req.body.title, message: req.body.message, last_update: update},
             {where: {id: req.body.postId}}
         )
         .then((post) => {
@@ -115,7 +119,7 @@ exports.updateTopic = (req, res, next) => {
             imageUrl= `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
             fs.unlink(`assets/images/${filename}`, ()=>{
                 Topic.update(
-                    {title: req.body.title, message: req.body.message,url_image: imageUrl},
+                    {title: req.body.title, message: req.body.message,url_image: imageUrl, last_update: update},
                     {where: {id: req.body.postId}}
                 )
                 .then((result)=> {

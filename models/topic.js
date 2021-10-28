@@ -21,6 +21,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER.UNSIGNED,
             allowNull:false
         },
+        last_update: {
+            type: Sequelize.DATE,
+            allowNull: true
+        }
     },{
         modelName: 'Topic',
         timestamps: true,
